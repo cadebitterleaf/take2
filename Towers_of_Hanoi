@@ -1,0 +1,105 @@
+package final_project;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Tower_Of_Hanoi
+{
+	private static Scanner in = new Scanner(System.in);
+	private static String peg;
+	
+	public static void printer(ArrayList<Integer> A, int moves, String Peg)
+	{
+		System.out.print("Peg " + Peg + ":  ");
+		for(int i : A)
+		{
+			System.out.print(i + ", ");
+		}
+		System.out.println("\n" + moves + " moves were made so far.");
+	}
+	
+	public static void towers(int n, ArrayList<Integer> A, ArrayList<Integer> B, ArrayList<Integer> C)
+	{
+		int moves = 0;
+		//moves n - 1 disks from peg A to B.
+		for(int i = 1; i < n; i++)
+		{
+			moves = n - 1;
+			B.set(i, A.get(i-1));
+		}
+		peg = "B";
+		printer(B, moves, peg);
+		for(int i = 0; i < A.size() - 1; i++)
+		{
+			A.remove(i);
+		}
+		//Moves the largest Disk to peg C, and increases the move count, depending if there is an even or odd number of disks.
+		if(A.get(0) > B.get(0) && A.get(A.size() - 1) % 2 != 0)
+		{
+			moves+= n - 2;
+			C.set(n-1, A.get(A.size() - 1));
+			A.remove(0);
+		}
+		else if(A.get(0) > B.get(0) && A.get(A.size() - 1) % 2 == 0)
+		{
+			moves += n - 1;
+			C.set(n-1, A.get(A.size() - 1));
+			A.remove(0);
+		}
+		else // Debug line.
+		{
+			System.out.println("You messed up.");
+		}
+		peg = "C";
+		printer(C, moves, peg);
+		
+		for(int i = 0, j = 1; i < n - 1; i++, j++)
+		{
+			moves += n - 1;
+			C.set(i, B.get(j));
+		}
+		printer(C, moves, peg);
+	}
+	
+	public static void main(String[] args)
+	{
+		//Sets the amount of disks.
+		System.out.println("How many disks?");
+		int n = in.nextInt();
+		while(n < 1)
+		{
+			System.out.println("Please choose a positive integer over 0.");
+			n = in.nextInt();
+		}
+		
+		//Puts disks on Peg A.
+		ArrayList<Integer> A = new ArrayList<Integer>();
+		for(int i = 1; i <= n; i++)
+		{
+			A.add(i);
+		}
+		
+		//Prints Peg A in a vertical line.
+		for(int i = 0; i < A.size(); i++)
+		{
+			int j = A.get(i);
+			System.out.print(j + "\n");
+		}
+		
+		//Initializes Pegs B and C.
+		ArrayList<Integer> B = new ArrayList<>();
+		for(int i = 0; i < n; i++)
+		{
+			B.add(0);
+		}
+		
+		ArrayList<Integer> C = new ArrayList<>();
+		for(int i = 0; i < n; i++)
+		{
+			C.add(0);
+		}
+		
+		towers(n, A, B, C);
+	}
+
+}
